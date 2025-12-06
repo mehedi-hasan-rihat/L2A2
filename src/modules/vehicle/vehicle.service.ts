@@ -14,6 +14,12 @@ const createVehicleService = async (payload: Record<string, any>) => {
   return result.rows[0];
 }
 
+const vehicleListService = async () => {
+  const result = await pool.query("SELECT * FROM vehicles");
+  return result.rows;
+}
+
 export const VehicleService = {
   createVehicleService,
+  vehicleListService
 };

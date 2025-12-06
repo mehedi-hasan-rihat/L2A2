@@ -5,6 +5,7 @@ import auth from "../../middleware/auth";
 const vehicleRoutes = Router();
 
 // Define vehicle-related routes here
-vehicleRoutes.post("/", auth("admin"), VehicleController.createVehicleController);
+vehicleRoutes.post("/", auth("admin"), VehicleController.createVehicle);
+vehicleRoutes.get("/", auth("admin"), VehicleController.vehicleList);
 
 export default vehicleRoutes;
