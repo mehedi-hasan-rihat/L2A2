@@ -25,7 +25,15 @@ const updateUserService = async (userId: number, data: Record<string, any>) => {
         [...values, userId]
     );
 
-    return result.rows[0];
+    const { id, name, email, phone, role } = result.rows[0];
+
+    return {
+        id,
+        name,
+        email,
+        phone,
+        role,
+    };
 };
 
 const getUserById = async (userId: number) => {
@@ -37,10 +45,11 @@ const getUserById = async (userId: number) => {
 };
 
 const deleteUserService = async (userId: number) => {
-
     //Before delete a user nned to check if user has any active bookings
 
-    const result = await pool.query("DELETE FROM users WHERE id = $1", [userId]);
+    const result = await pool.query("DELETE FROM users WHERE id = $1", [
+        userId,
+    ]);
     return result;
 };
 
@@ -48,5 +57,5 @@ export const UserService = {
     getUserService,
     getUserById,
     updateUserService,
-    deleteUserService
+    deleteUserService,
 };
