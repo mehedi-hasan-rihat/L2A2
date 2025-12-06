@@ -5,16 +5,23 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import config from "../config";
 
 interface DecodedToken extends JwtPayload {
+    name: string;
+    email: string;
     role: string;
+}
+
+declare global {
+    namespace Express {
+        interface Request {
+            user?: DecodedToken;
+        }
+    }
 }
 
 // roles = ["admin", "user"]
 const auth = (...roles: string[]) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
-            
-            console.log("auth middleware called");
-
             const authHeader = req.headers.authorization;
 
             if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -45,6 +52,7 @@ const auth = (...roles: string[]) => {
                 });
             }
 
+            req.user = decoded;
             next();
 
         } catch (err: any) {
