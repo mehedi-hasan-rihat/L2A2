@@ -1,4 +1,4 @@
-import { pool } from "../../../config/database";
+import { pool } from "../../config/database";
 
 const createVehicleService = async (payload: Record<string, any>) => {
   // Vehicle service logic here

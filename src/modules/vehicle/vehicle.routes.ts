@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { VehicleController } from "./vehicle.controller";
-import auth from "../../../middleware/auth";
+import auth from "../../middleware/auth";
 
 const vehicleRoutes = Router();
 

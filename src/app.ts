@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import authRouter from './modules/auth/auth.routes';
 import initDB from './config/database';
-import vehicleRoutes from './modules/auth/vehicle/vehicle.routes';
+import vehicleRoutes from './modules/vehicle/vehicle.routes';
 
 const app = express();
 
