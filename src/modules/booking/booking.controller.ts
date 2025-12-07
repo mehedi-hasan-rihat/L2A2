@@ -40,18 +40,16 @@ const getBookings = async (req: Request, res: Response) => {
 const updateBooking = async (req: Request, res: Response) => {
     try {
         if (!req.params.bookingId) {
-            throw new Error("Booking id is required");
+            throw new Error("Booking Id Missing!");
         }
+        
         const result = await BookingService.updateBookingService(
             parseInt(req.params.bookingId),
             req.user!.id,
             req.user!.role,
-            req.body.action
+            req.body.status
         );
-        res.status(200).json({
-            success: true,
-            data: result
-        });
+        res.status(200).json(result);
     } catch (error: any) {
         res.status(400).json({
             success: false,
