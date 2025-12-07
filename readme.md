@@ -1,7 +1,7 @@
 # Vehicle Rental System API
 
 ## Live URL
-[[#](https://rental-system-blue.vercel.app/)]
+[[https://rental-system-blue.vercel.app/](https://rental-system-blue.vercel.app/)]
 
 ## Features
 - User authentication (JWT-based)
