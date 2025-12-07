@@ -4,7 +4,7 @@ const createBookingService = async (payload: Record<string, any>) => {
     const { customer_id, vehicle_id, rent_start_date, rent_end_date } = payload;
 
     const vehicle = await pool.query(
-        "SELECT id, daily_rent_price, availability_status FROM vehicles WHERE id = $1",
+        "SELECT id, vehicle_name, daily_rent_price, availability_status FROM vehicles WHERE id = $1",
         [vehicle_id]
     );
 
@@ -21,7 +21,6 @@ const createBookingService = async (payload: Record<string, any>) => {
     const duration = Math.ceil(
         (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
     );
-    console.log("Duration:", duration);
 
     if (duration <= 0) {
         throw new Error("End date must be after start date");
@@ -38,7 +37,10 @@ const createBookingService = async (payload: Record<string, any>) => {
         "UPDATE vehicles SET availability_status = 'booked' WHERE id = $1",
         [vehicle_id]
     );
-    return booking.rows[0];
+    return {...booking.rows[0], vehicle: {
+        "vehicle_name": vehicle.rows[0].vehicle_name,
+        "daily_rent_price": vehicle.rows[0].daily_rent_price
+    }};
 };
 
 const getBookingsService = async (userId: number, role: string) => {

@@ -19,8 +19,13 @@ const createBooking = async (req: Request, res: Response) => {
 
 const getBookings = async (req: Request, res: Response) => {
     try {
-        const result = await BookingService.getBookingsService(req.user!.id, req.user!.role);
+
+        const userId = req.user!.id;
+        const userRole = req.user!.role;
+
+        const result = await BookingService.getBookingsService(userId, userRole);
         res.status(200).json({
+            message: userRole === "admin" ? "Bookings retrieved successfully" : "Your bookings retrieved successfully",
             success: true,
             data: result
         });
