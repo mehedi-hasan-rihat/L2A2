@@ -12,8 +12,7 @@ const createVehicle = async (req: Request, res: Response) => {
             data: result,
         });
     } catch (err: any) {
-        console.log(err, "error from vehicle controller");
-        res.status(500).json({
+        res.status(400).json({
             success: false,
             message: err.message,
         });
@@ -23,51 +22,40 @@ const createVehicle = async (req: Request, res: Response) => {
 const vehicleList = async (req: Request, res: Response) => {
     try {
         const result = await VehicleService.vehicleListService();
-
-        if(result.length === 0 ){
-            res.status(200).json({
-                success: true,
-                message: "No vehicles found",
-                data: result,
-            })
-        }
-
         res.status(200).json({
             success: true,
-            message: "Vehicles retrieved successfully",
+            message: result.length === 0 ? "No vehicles found" : "Vehicles retrieved successfully",
             data: result,
         });
     } catch (err: any) {
-        console.log(err, "error from vehicle controller");
-        res.status(500).json({
+        res.status(400).json({
             success: false,
             message: err.message,
         });
     }
 };
 
-const getVehicleById = async (req: Request, res: Response) => { 
-    // Controller logic to get vehicle by ID
+const getVehicleById = async (req: Request, res: Response) => {
     try {
-        const vehicleId = req.params.vehicleId;
-        console.log(vehicleId, "vehicleId");
 
-        if (!vehicleId) {
-            return res.status(400).json({
-                success: false,
-                message: "Vehicle ID is required",
-            });
+        if(!req.params.vehicleId){
+            return  res.status(400).json({ success: false, message: 'Vehicle ID is required' });
         }
 
-        const result = await VehicleService.getVehicleByIdService(vehicleId);
+        const result = await VehicleService.getVehicleByIdService(req.params.vehicleId);
+        if (!result) {
+            return res.status(404).json({
+                success: false,
+                message: "Vehicle not found",
+            });
+        }
         res.status(200).json({
             success: true,
             message: "Vehicle retrieved successfully",
             data: result,
         });
     } catch (err: any) {
-        console.log(err, "error from vehicle controller");
-        res.status(500).json({
+        res.status(400).json({
             success: false,
             message: err.message,
         });
@@ -75,25 +63,20 @@ const getVehicleById = async (req: Request, res: Response) => {
 }
 
 const updateVehicle = async (req: Request, res: Response) => {
-    // Controller logic to update vehicle details
     try {
-        const vehicleId = req.params.vehicleId;
-        const updateData = req.body;    
-        if (!vehicleId) {
-            return res.status(400).json({
-                success: false,
-                message: "Vehicle ID is required",
-            });
+
+        if(!req.params.vehicleId){
+            return  res.status(400).json({ success: false, message: 'Vehicle ID is required' });
         }
-        const result = await VehicleService.updateVehicleService(vehicleId, updateData);
+
+        const result = await VehicleService.updateVehicleService(req.params.vehicleId, req.body);
         res.status(200).json({
             success: true,
             message: "Vehicle updated successfully",
             data: result,
         });
-    } catch (err: any) {    
-        console.log(err, "error from vehicle controller");
-        res.status(500).json({
+    } catch (err: any) {
+        res.status(400).json({
             success: false, 
             message: err.message,
         });
@@ -101,24 +84,19 @@ const updateVehicle = async (req: Request, res: Response) => {
 }
 
 const deleteVehicle = async (req: Request, res: Response) => {
-    // Controller logic to delete a vehicle
     try {
-        const vehicleId = req.params.vehicleId;
-        if (!vehicleId) {
-            return res.status(400).json({
-                success: false,
-                message: "Vehicle ID is required",
-            });
+
+        if(!req.params.vehicleId){
+            return  res.status(400).json({ success: false, message: 'Vehicle ID is required' });
         }
-        // Assuming a deleteVehicleService exists in VehicleService
-        await VehicleService.deleteVehicleService(vehicleId);
+
+        await VehicleService.deleteVehicleService(req.params.vehicleId);
         res.status(200).json({
             success: true,
             message: "Vehicle deleted successfully",
         });
     } catch (err: any) {
-        console.log(err, "error from vehicle controller");
-        res.status(500).json({
+        res.status(400).json({
             success: false, 
             message: err.message,
         });

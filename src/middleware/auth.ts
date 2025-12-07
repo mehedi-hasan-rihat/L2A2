@@ -47,8 +47,9 @@ const auth = (...roles: string[]) => {
             const decoded = jwt.verify(token, config.JWT_SECRET) as DecodedToken;
 
             if (roles.length && !roles.includes(decoded.role)) {
-                return res.status(500).json({
-                    error: "unauthorized!!!",
+                return res.status(403).json({
+                    success: false,
+                    message: "Forbidden: Insufficient permissions",
                 });
             }
 
@@ -56,9 +57,9 @@ const auth = (...roles: string[]) => {
             next();
 
         } catch (err: any) {
-            res.status(500).json({
+            res.status(401).json({
                 success: false,
-                message: err.message,
+                message: "Unauthorized: Invalid token",
             });
         }
     };

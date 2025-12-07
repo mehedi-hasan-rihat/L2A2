@@ -9,9 +9,11 @@ const getUsers = async (req: Request, res: Response) => {
             message: "Users retrieved successfully",
             data: result?.rows,
         });
-    } catch (error) {
-        console.error('Error fetching users:', error);
-        res.status(500).json({ message: 'Internal server error' });
+    } catch (error: any) {
+        res.status(400).json({ 
+            success: false, 
+            message: error.message 
+        });
     }   
 
 };
@@ -45,25 +47,25 @@ const updateUser = async (req: Request, res: Response) => {
             data: result
         });
     } catch (error: any) {
-        res.status(500).json({ success: false, message: error.message });
+        res.status(400).json({ success: false, message: error.message });
     }
 };
 
-
 const deleteUser = async (req: Request, res: Response) => {
     try {
-        const { userId } = req.params;  
-        if(!userId){
+
+        if(!req.params.userId){
             return  res.status(400).json({ success: false, message: 'User ID is required' });
         }
-        // Perform deletion
-        await UserService.deleteUserService(parseInt(userId));
+
+
+        await UserService.deleteUserService(parseInt(req.params.userId));
         res.status(200).json({  
             success: true,
             message: "User deleted successfully"
         });
     } catch (error: any) {
-        res.status(500).json({ success: false, message: error.message });
+        res.status(400).json({ success: false, message: error.message });
     }   
 };
 
