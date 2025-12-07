@@ -65,13 +65,12 @@ const updateVehicleService = async (vehicleId: string, updateData: Record<string
 };
 
 const deleteVehicleService = async (vehicleId: string) => {
-    // Check if vehicle is booked
-    const vehicle = await pool.query(
-        "SELECT availability_status FROM vehicles WHERE id = $1",
+    const activeBookings = await pool.query(
+        "SELECT id FROM bookings WHERE vehicle_id = $1 AND status = 'active'",
         [vehicleId]
     );
     
-    if (vehicle.rows[0]?.availability_status === 'booked') {
+    if (activeBookings.rows.length > 0) {
         throw new Error("Cannot delete vehicle with active bookings");
     }
 
